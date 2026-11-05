@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oddry Studios | Premium Game Development</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        oddry: {
+                            black: '#030305',
+                            dark: '#0a0a0f',
+                            purple: '#6d28d9',
+                            neon: '#06b6d4',
+                            gold: '#fbbf24'
+                        }
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #030305;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030305;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6d28d9;
+        }
+
+        /* Premium Glow Effects */
+        .glow-text {
+            text-shadow: 0 0 20px rgba(109, 40, 217, 0.5);
+        }
+        
+        .glow-box:hover {
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.2), inset 0 0 20px rgba(109, 40, 217, 0.1);
+        }
+
+        /* Ambient Background Orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 20s infinite ease-in-out alternate;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: #6d28d9;
+            top: -10%;
+            left: -10%;
+        }
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: #06b6d4;
+            bottom: 20%;
+            right: -5%;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 50px) scale(1.1); }
+        }
+
+        /* Scroll Reveal Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Game Card Hover Styles */
+        .game-card {
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .game-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(3,3,5,1) 0%, rgba(3,3,5,0) 100%);
+            z-index: 1;
+            transition: opacity 0.3s ease;
+        }
+        .game-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(109, 40, 217, 0.5);
+        }
+        .game-card-content {
+            z-index: 2;
+        }
+        .game-card-img {
+            transition: transform 0.7s ease;
+        }
+        .game-card:hover .game-card-img {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-oddry-purple selection:text-white">
+
+    <!-- Ambient Background -->
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300 border-b border-white/5 bg-oddry-black/50 backdrop-blur-lg" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="w-8 h-8 rounded bg-gradient-to-br from-oddry-purple to-oddry-neon flex items-center justify-center">
+                        <span class="font-display font-bold text-xl text-white">O</span>
+                    </div>
+                    <span class="font-display font-bold text-2xl tracking-tight text-white">Oddry<span class="text-white/50">Studios</span></span>
+                </div>
+                
+                <!-- Desktop Menu & Lang Toggle -->
+                <div class="hidden md:flex items-center">
+                    <div class="flex items-baseline space-x-8 mr-6">
+                        <a href="#about" data-i18n="nav-about" class="text-gray-300 hover:text-white transition-colors px-3 py-2 text-sm font-medium tracking-wide">About</a>
+                        <a href="#games" data-i18n="nav-games" class="text-gray-300 hover:text-white transition-colors px-3 py-2 text-sm font-medium tracking-wide">Games</a>
+                        <a href="#contact" data-i18n="nav-contact" class="bg-white/5 hover:bg-white/10 border border-white/10 hover:border-oddry-purple text-white transition-all px-5 py-2 rounded-full text-sm font-medium">Contact Us</a>
+                    </div>
+                    <!-- Language Toggle -->
+                    <button id="lang-btn-desktop" onclick="toggleLanguage()" class="group relative flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-full border border-white/20 bg-white/5 hover:bg-white/10 hover:border-oddry-neon/50 hover:shadow-[0_0_12px_rgba(6,182,212,0.4)] transition-all text-white w-[72px] justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-70 group-hover:opacity-100 transition-opacity"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        <span class="lang-text tracking-wider">EN</span>
+                        <span class="absolute -bottom-10 right-1/2 translate-x-1/2 bg-oddry-black border border-white/10 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg">Değiştir / Change</span>
+                    </button>
+                </div>
+
+                <!-- Mobile menu button & Lang Toggle -->
+                <div class="md:hidden flex items-center gap-4">
+                    <button id="lang-btn-mobile" onclick="toggleLanguage()" class="group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-full border border-white/20 bg-white/5 hover:bg-white/10 hover:border-oddry-neon/50 transition-all text-white w-[72px] justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        <span class="lang-text tracking-wider">EN</span>
+                    </button>
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-oddry-dark border-b border-white/10">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#about" data-i18n="nav-about" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
+                <a href="#games" data-i18n="nav-games" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Games</a>
+                <a href="#contact" data-i18n="nav-contact" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center z-10 pt-20">
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] [mask-image:linear-gradient(to_bottom,white,transparent)]"></div>
+        
+        <div class="max-w-5xl mx-auto px-6 text-center reveal">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-oddry-purple/30 bg-oddry-purple/10 backdrop-blur-sm mb-8">
+                <span class="w-2 h-2 rounded-full bg-oddry-neon animate-pulse"></span>
+                <span class="text-xs font-semibold uppercase tracking-widest text-oddry-neon" data-i18n="hero-badge">Next-Gen Gaming</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-display font-bold tracking-tighter mb-6 leading-tight">
+                <span data-i18n="hero-title-1">Crafting</span> <span class="text-transparent bg-clip-text bg-gradient-to-r from-oddry-purple to-oddry-neon glow-text" data-i18n="hero-title-2">Immersive</span><br><span data-i18n="hero-title-3">Worlds.</span>
+            </h1>
+            
+            <p class="mt-4 text-lg md:text-xl text-gray-400 max-w-2xl mx-auto font-light mb-10" data-i18n="hero-desc">
+                Oddry Studios is a premium game development collective pushing the boundaries of interactive storytelling and cutting-edge visuals.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#games" class="px-8 py-4 rounded-full bg-white text-oddry-black font-semibold hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)]" data-i18n="hero-btn-1">
+                    Explore Our Games
+                </a>
+                <a href="#about" class="px-8 py-4 rounded-full bg-transparent border border-white/20 text-white font-semibold hover:border-white/60 hover:bg-white/5 transition-all" data-i18n="hero-btn-2">
+                    Our Philosophy
+                </a>
+            </div>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce opacity-50">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-32 relative z-10 bg-oddry-dark/50 border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="reveal">
+                    <h2 class="text-3xl md:text-5xl font-display font-bold mb-6"><span data-i18n="about-title-1">Redefining the</span> <br><span class="text-oddry-purple" data-i18n="about-title-2">Player Experience.</span></h2>
+                    <p class="text-gray-400 text-lg mb-6 leading-relaxed font-light" data-i18n="about-p1">
+                        Founded in 2026, Oddry Studios was born from a singular vision: to create games that blur the line between reality and digital fantasy. We combine state-of-the-art engine technology with profound, emotional narratives.
+                    </p>
+                    <p class="text-gray-400 text-lg mb-8 leading-relaxed font-light" data-i18n="about-p2">
+                        Our team comprises industry veterans and visionary artists dedicated to delivering high-fidelity, premium gaming experiences that linger in your mind long after the screen goes dark.
+                    </p>
+                </div>
+                
+                <div class="relative reveal h-full min-h-[400px] rounded-2xl overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-br from-oddry-purple/20 to-oddry-neon/20 mix-blend-overlay z-10 group-hover:opacity-0 transition-opacity duration-700"></div>
+                    <div class="w-full h-full bg-oddry-black relative overflow-hidden flex items-center justify-center">
+                        <div class="absolute w-[150%] h-[150%] bg-[conic-gradient(at_center_center,transparent_45%,#6d28d9_180%,transparent_315%)] animate-[spin_10s_linear_infinite] opacity-50"></div>
+                        <div class="absolute inset-[2px] bg-oddry-dark rounded-2xl z-0 flex items-center justify-center">
+                            <div class="w-32 h-32 rounded-full border border-white/10 flex items-center justify-center relative">
+                                <div class="w-16 h-16 bg-oddry-neon rounded-full blur-xl opacity-50 absolute"></div>
+                                <svg class="w-10 h-10 text-white z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Portfolio Section -->
+    <section id="games" class="py-32 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-20 reveal">
+                <h2 class="text-4xl md:text-5xl font-display font-bold mb-4"><span data-i18n="games-title-1">Our</span> <span class="text-transparent bg-clip-text bg-gradient-to-r from-oddry-neon to-oddry-purple" data-i18n="games-title-2">Masterpieces</span></h2>
+                <p class="text-gray-400 max-w-2xl mx-auto font-light" data-i18n="games-desc">Explore our lineup of next-generation titles designed to push hardware to its limits and players to the edge of their seats.</p>
+            </div>
+
+            <div class="flex items-center justify-center py-12 reveal">
+                <div class="relative group cursor-default">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-oddry-purple to-oddry-neon rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+                    
+                    <div class="relative px-16 py-12 bg-oddry-dark/90 backdrop-blur-xl ring-1 ring-white/10 rounded-2xl flex flex-col items-center justify-center gap-4 text-center">
+                        <div class="w-16 h-16 rounded-full border border-white/10 bg-white/5 flex items-center justify-center mb-2">
+                            <svg class="w-8 h-8 text-gray-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-3xl md:text-4xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500 tracking-widest uppercase mt-2" data-i18n="games-soon">
+                            Coming Soon
+                        </span>
+                        <p class="text-gray-400 font-light mt-2 max-w-sm" data-i18n="games-soon-desc">
+                            We are currently building brand new worlds in our studio. Stay tuned for updates.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action / Newsletter -->
+    <section class="py-24 relative z-10">
+        <div class="max-w-4xl mx-auto px-6 lg:px-8">
+            <div class="bg-oddry-dark border border-white/10 rounded-3xl p-10 md:p-16 text-center relative overflow-hidden glow-box reveal">
+                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-full h-1 bg-gradient-to-r from-transparent via-oddry-purple to-transparent"></div>
+                
+                <h2 class="text-3xl md:text-4xl font-display font-bold mb-4" data-i18n="nl-title">Join the Inner Circle</h2>
+                <p class="text-gray-400 mb-8 max-w-lg mx-auto font-light" data-i18n="nl-desc">Subscribe to get exclusive dev-logs, beta access, and early announcements directly from our studio.</p>
+                
+                <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onsubmit="event.preventDefault();">
+                    <input type="email" placeholder="Enter your email" required class="flex-1 bg-white/5 border border-white/10 rounded-full px-6 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-oddry-purple focus:ring-1 focus:ring-oddry-purple transition-colors">
+                    <button type="submit" class="bg-white text-oddry-black font-semibold rounded-full px-8 py-3 hover:bg-gray-200 transition-colors" data-i18n="nl-btn">
+                        Subscribe
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-black border-t border-white/5 pt-20 pb-10 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="w-8 h-8 rounded bg-gradient-to-br from-oddry-purple to-oddry-neon flex items-center justify-center">
+                            <span class="font-display font-bold text-xl text-white">O</span>
+                        </div>
+                        <span class="font-display font-bold text-2xl tracking-tight">Oddry<span class="text-white/50">Studios</span></span>
+                    </div>
+                    <p class="text-gray-500 text-sm max-w-xs font-light" data-i18n="footer-desc">
+                        Forging the future of interactive entertainment. Istanbul, Türkiye.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-semibold mb-4" data-i18n="footer-studio">Studio</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-white transition-colors" data-i18n="footer-about">About Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-i18n="footer-careers">Careers</a> <span class="bg-oddry-purple/20 text-oddry-purple text-[10px] px-2 py-0.5 rounded ml-1">HIRING</span></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-i18n="footer-press">Press Kit</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-semibold mb-4" data-i18n="footer-connect">Connect</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-white transition-colors">Twitter / X</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Instagram</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">LinkedIn</a></li>
+                        <li><a href="mailto:hello@oddrystudios.com" class="hover:text-white transition-colors" data-i18n="footer-support">Contact Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-gray-600 text-xs" data-i18n="footer-rights">
+                    &copy; 2026 Oddry Studios. All rights reserved.
+                </p>
+                <div class="flex gap-4 text-xs text-gray-600">
+                    <a href="#" class="hover:text-white transition-colors" data-i18n="footer-privacy">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors" data-i18n="footer-terms">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts for Interactivity and Animations -->
+    <script>
+        // Language Dictionary
+        const translations = {
+            en: {
+                'nav-about': 'About',
+                'nav-games': 'Games',
+                'nav-contact': 'Contact Us',
+                'hero-badge': 'Next-Gen Gaming',
+                'hero-title-1': 'Crafting',
+                'hero-title-2': 'Immersive',
+                'hero-title-3': 'Worlds.',
+                'hero-desc': 'Oddry Studios is a premium game development collective pushing the boundaries of interactive storytelling and cutting-edge visuals.',
+                'hero-btn-1': 'Explore Our Games',
+                'hero-btn-2': 'Our Philosophy',
+                'about-title-1': 'Redefining the',
+                'about-title-2': 'Player Experience.',
+                'about-p1': 'Founded in 2026, Oddry Studios was born from a singular vision: to create games that blur the line between reality and digital fantasy. We combine state-of-the-art engine technology with profound, emotional narratives.',
+                'about-p2': 'Our team comprises industry veterans and visionary artists dedicated to delivering high-fidelity, premium gaming experiences that linger in your mind long after the screen goes dark.',
+                'games-title-1': 'Our',
+                'games-title-2': 'Masterpieces',
+                'games-desc': 'Explore our lineup of next-generation titles designed to push hardware to its limits and players to the edge of their seats.',
+                'games-soon': 'Coming Soon...',
+                'games-soon-desc': 'We are currently building brand new worlds in our studio. Stay tuned for updates.',
+                'nl-title': 'Join the Inner Circle',
+                'nl-desc': 'Subscribe to get exclusive dev-logs, beta access, and early announcements directly from our studio.',
+                'nl-btn': 'Subscribe',
+                'footer-desc': 'Forging the future of interactive entertainment. Istanbul, Türkiye.',
+                'footer-studio': 'Studio',
+                'footer-about': 'About Us',
+                'footer-careers': 'Careers',
+                'footer-press': 'Press Kit',
+                'footer-connect': 'Connect',
+                'footer-support': 'Contact Support',
+                'footer-rights': '© 2026 Oddry Studios. All rights reserved.',
+                'footer-privacy': 'Privacy Policy',
+                'footer-terms': 'Terms of Service'
+            },
+            tr: {
+                'nav-about': 'Hakkımızda',
+                'nav-games': 'Oyunlar',
+                'nav-contact': 'Bize Ulaşın',
+                'hero-badge': 'Yeni Nesil Oyunculuk',
+                'hero-title-1': 'Sürükleyici',
+                'hero-title-2': 'Dünyalar',
+                'hero-title-3': 'Yaratıyoruz.',
+                'hero-desc': 'Oddry Studios, interaktif hikaye anlatımının ve son teknoloji görselliğin sınırlarını zorlayan premium bir oyun geliştirme topluluğudur.',
+                'hero-btn-1': 'Oyunları Keşfet',
+                'hero-btn-2': 'Felsefemiz',
+                'about-title-1': 'Oyuncu Deneyimini',
+                'about-title-2': 'Yeniden Tanımlıyoruz.',
+                'about-p1': '2026 yılında kurulan Oddry Studios, tek bir vizyondan doğdu: gerçeklik ile dijital fantezi arasındaki çizgiyi bulanıklaştıran oyunlar yaratmak. Son teknoloji motor gücünü derin, duygusal anlatılarla birleştiriyoruz.',
+                'about-p2': 'Ekibimiz, ekran karardıktan uzun süre sonra bile akılda kalan yüksek kaliteli, premium oyun deneyimleri sunmaya adanmış sektörün tecrübeli isimlerinden ve vizyoner sanatçılardan oluşmaktadır.',
+                'games-title-1': 'Bizim',
+                'games-title-2': 'Başyapıtlarımız',
+                'games-desc': 'Donanımların sınırlarını zorlamak ve oyuncuları koltuklarının ucunda tutmak için tasarlanmış yeni nesil oyunlarımızı keşfedin.',
+                'games-soon': 'Yakında...',
+                'games-soon-desc': 'Şu anda stüdyomuzda yepyeni dünyalar inşa ediyoruz. Gelişmeler için takipte kalın.',
+                'nl-title': 'İç Çembere Katılın',
+                'nl-desc': 'Doğrudan stüdyomuzdan özel geliştirici günlükleri, beta erişimi ve duyurular almak için abone olun.',
+                'nl-btn': 'Abone Ol',
+                'footer-desc': 'İnteraktif eğlencenin geleceğini şekillendiriyoruz. İstanbul, Türkiye.',
+                'footer-studio': 'Stüdyo',
+                'footer-about': 'Hakkımızda',
+                'footer-careers': 'Kariyer',
+                'footer-press': 'Basın Kiti',
+                'footer-connect': 'Bağlantı',
+                'footer-support': 'Destek Merkezi',
+                'footer-rights': '© 2026 Oddry Studios. Tüm hakları saklıdır.',
+                'footer-privacy': 'Gizlilik Politikası',
+                'footer-terms': 'Hizmet Şartları'
+            }
+        };
+
+        let currentLang = 'en';
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'tr' : 'en';
+            
+            // Update all elements with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    element.innerHTML = translations[currentLang][key];
+                }
+            });
+            
+            // Update the language button text to reflect current language
+            document.querySelectorAll('.lang-text').forEach(el => {
+                el.innerText = currentLang.toUpperCase();
+            });
+            
+            // Update email input placeholder manually
+            const emailInput = document.querySelector('input[type="email"]');
+            if(emailInput) {
+                emailInput.placeholder = currentLang === 'en' ? 'Enter your email' : 'E-posta adresiniz';
+            }
+        }
+
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Navbar blur effect on scroll
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-oddry-black/80', 'shadow-lg');
+                navbar.classList.remove('bg-oddry-black/50');
+            } else {
+                navbar.classList.add('bg-oddry-black/50');
+                navbar.classList.remove('bg-oddry-black/80', 'shadow-lg');
+            }
+        });
+
+        // Intersection Observer for scroll animations (Reveal Effect)
+        document.addEventListener("DOMContentLoaded", function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target); // Run once
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach((el) => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
